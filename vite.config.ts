@@ -1,20 +1,23 @@
+import { resolve } from 'node:path';
+
+import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
-  test: {
-    globals: true,
-    environment: 'node',
-    include: ['src/**/*.{test,spec}.ts'],
-    exclude: ['node_modules', 'dist', 'src/generated/**'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html'],
-      exclude: ['src/generated/**', 'src/**/*.test.ts']
 
+  build: {
+    outDir: resolve(import.meta.dirname, "dist"),
+    lib: {
+      entry: resolve(import.meta.dirname, "src/index.ts"),
+      name: "UnoApi",
+      formats: ["es"],
+      fileName: "index"
     },
-    setupFiles: ['./src/test/setup.ts']
+    rollupOptions: {
+      external: []
+    },
+    minify: 'terser'
 
   }
 
