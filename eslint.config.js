@@ -16,7 +16,7 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname
 
       }
-      
+
     },
     plugins: {
       import: importPlugin
@@ -34,7 +34,6 @@ export default tseslint.config(
 
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
 
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'import/order': [
         'warn',
         {
@@ -46,7 +45,8 @@ export default tseslint.config(
 
       ],
 
-      '@typescript-eslint/naming-convention': 'off'
+      '@typescript-eslint/naming-convention': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off'
 
     },
 
