@@ -4,7 +4,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client";
 import type { UnoSeed } from "../models/baralho";
 
-import db from "./seeds/db.json" with { type: "json" };
+import seed from "./seeds/seed.json" with { type: "json" };
 
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -25,7 +25,7 @@ async function populateDB(): Promise<void> {
 
   console.log(`Banco de dados limpo`)
 
-  const baralhos = (db as unknown as UnoSeed).baralhos;
+  const baralhos = (seed as unknown as UnoSeed).baralhos;
 
    for (const b of baralhos) {
     console.log(`→ Semeando "${b.nome}" (${b.id})...`);
