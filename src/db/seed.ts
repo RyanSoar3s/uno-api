@@ -53,7 +53,7 @@ async function populateDB(): Promise<void> {
     });
 
     // Cartas — dependem do Baralho já existir (FK baralhoId)
-    for (const c of b.cartas ?? []) {
+    for (const c of b.cartas) {
       await prisma.carta.upsert({
         where: { id: c.id! },
         update: {},
@@ -81,7 +81,7 @@ async function populateDB(): Promise<void> {
           descricao: r.descricao!,
           baralhoId: b.id!,
           afetaCartas: {
-            connect: (r.afetaCartas ?? []).map((cartaId: string) => ({ id: cartaId })),
+            connect: (r.afetaCartas).map((cartaId: string) => ({ id: cartaId })),
 
           }
 
