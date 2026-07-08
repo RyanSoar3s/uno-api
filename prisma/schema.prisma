@@ -46,6 +46,10 @@ enum Cor {
   VERDE
   AMARELO
   PRETO
+  ROSA
+  VERDE_AGUA
+  LARANJA
+  ROXO
 }
 
 // ------------------------------------------------------------------
