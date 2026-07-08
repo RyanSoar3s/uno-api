@@ -515,16 +515,16 @@
           "nome": "Flip Side",
           "descricao": "Ao jogar a carta Flip, o baralho de compra, a pilha de descarte e a mão de todos os jogadores são virados para o lado oposto (Claro ↔ Escuro), que passa a valer até a próxima carta Flip",
           "afetaCartas": [
-            "flip-claro",
-            "flip-escuro"
+            "flip-flip-claro",
+            "flip-flip-escuro"
           ]
         },
         {
           "nome": "Desafio ao Comprar Duas/Cor (Wild Draw Two / Wild Draw Color)",
           "descricao": "Essas cartas só podem ser jogadas se o jogador não tiver carta da cor atual na mão; o próximo jogador pode desafiar, obrigando a mostrar a mão. Se a jogada for ilegal, quem jogou compra as cartas; se for legal, o desafiante compra 2 cartas extras (Escuro: até a cor + 2)",
           "afetaCartas": [
-            "wild-comprar-dois-claro",
-            "wild-comprar-cor-escuro"
+            "flip-coringa-comprar-dois-claro",
+            "flip-coringa-comprar-cor-escuro"
           ]
         }
       ],
