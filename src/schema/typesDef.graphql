@@ -1,0 +1,79 @@
+#graphql
+
+enum Disponibilidade {
+  FISICO_E_DIGITAL
+  APENAS_FISICO
+  APENAS_DIGITAL
+}
+
+enum Lado {
+  CLARO
+  ESCURO
+}
+
+type Baralho {
+  id: ID!
+  nome: String!
+  anoLancamento: Int
+  totalCartas: Int!
+  temaLicenciado: String
+  disponibilidade: Disponibilidade!
+  existeFisicamente: Boolean!
+  existeNoJogoDigital: Boolean!
+  observacao: String            # notas sobre incertezas, particularidades do baralho (ex: cartas de dois lados)
+  regrasEspeciais: [RegraEspecial!]!
+  cartas: [Carta!]!
+}
+
+type Carta {
+  id: ID!
+  tipo: TipoCarta!
+  cor: Cor                      # null quando a cor varia ou não se aplica (ex: baralhos "all wild")
+  numero: Int
+  lado: Lado                    # null para baralhos sem cartas de dois lados; CLARO/ESCURO no Uno Flip
+  efeito: String
+  quantidadeNoBaralho: Int!
+  baralho: Baralho!
+}
+
+type RegraEspecial {
+  nome: String!
+  descricao: String!
+  afetaCartas: [Carta!]!
+}
+
+enum TipoCarta {
+  NUMERO
+  COMPRAR_DOIS
+  COMPRAR_QUATRO
+  PULAR
+  INVERTER
+  CORINGA
+  CORINGA_COMPRAR_QUATRO
+  ESPECIAL
+}
+
+enum Cor {
+  VERMELHO
+  AZUL
+  VERDE
+  AMARELO
+  PRETO
+  ROSA
+  VERDE_AGUA
+  LARANJA
+  ROXO
+}
+
+type Query {
+  baralhos(tema: String, disponibilidade: Disponibilidade): [Baralho!]!
+  baralho(id: ID!): Baralho
+  cartas(tipo: TipoCarta, cor: Cor, lado: Lado): [Carta!]!
+  compararBaralhos(id1: ID!, id2: ID!): ComparacaoBaralhos!
+}
+
+type ComparacaoBaralhos {
+  cartasExclusivasBaralho1: [Carta!]!
+  cartasExclusivasBaralho2: [Carta!]!
+  regrasDiferentes: [String!]!
+}
