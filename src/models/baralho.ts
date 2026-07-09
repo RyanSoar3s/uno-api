@@ -1,16 +1,16 @@
-enum Disponibilidade {
+export enum Disponibilidade {
   FISICO_E_DIGITAL = "FISICO_E_DIGITAL",
   APENAS_FISICO = "APENAS_FISICO",
   APENAS_DIGITAL = "APENAS_DIGITAL"
 }
 
-enum Lado {
+export enum Lado {
   CLARO = "CLARO",
   ESCURO = "ESCURO"
 
 }
 
-enum TipoCarta {
+export enum TipoCarta {
   NUMERO = "NUMERO",
   COMPRAR_DOIS = "COMPRAR_DOIS",
   COMPRAR_QUATRO = "COMPRAR_QUATRO",
@@ -22,7 +22,7 @@ enum TipoCarta {
 
 }
 
-enum Cor {
+export enum Cor {
   VERMELHO = "VERMELHO",
   AZUL = "AZUL",
   VERDE = "VERDE",
@@ -44,7 +44,7 @@ enum Cor {
 // e ainda documenta exatamente o que estamos escolhendo ignorar.
 // ------------------------------------------------------------------
 
-interface CartaSeed {
+export interface CartaSeed {
   id: string;
   tipo: TipoCarta;
   cor?: Cor | null;
@@ -61,13 +61,13 @@ interface CartaSeed {
   ilustracaoTema?: string;
 }
 
-interface RegraEspecialSeed {
+export interface RegraEspecialSeed {
   nome: string;
   descricao: string;
   afetaCartas: string[];
 }
 
-interface BaralhoSeed {
+export interface BaralhoSeed {
   id: string;
   nome: string;
   anoLancamento?: number | null;
