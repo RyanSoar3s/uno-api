@@ -1,22 +1,9 @@
-import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-import { PrismaClient } from "../../generated/prisma/client";
 import type { UnoSeed } from "../models/baralho";
 
+import { getClient } from "./client";
 import seed from "./seeds/seed.json" with { type: "json" };
 
-
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-  throw new Error("Environment variable DATABASE_URL is not set");
-
-}
-
-const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString: databaseUrl })
-
-});
+const prisma = getClient();
 
 async function populateDB(): Promise<void> {
   await prisma.baralho.deleteMany();
