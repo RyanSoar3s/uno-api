@@ -3,79 +3,81 @@ import { getClient } from "../db/client";
 const prisma = getClient();
 
 async function getCartas(tipoCarta?: string, cor?: string, lado?: string) {
-  const cartas = await prisma.carta.findMany();
+  const where: Record<string, string> = {};
 
-  const cartasFiltradas = cartas.filter((c) => {
-    if (!(tipoCarta && cor && lado)) return true;
+  if (tipoCarta) where.tipo = tipoCarta;
+  if (cor) where.cor = cor;
+  if (lado) where.lado = lado;
 
-    return (
-      c.tipo === tipoCarta ||
-      c.cor === cor ||
-      c.lado === lado
-
-    );
-
-  });
-
-  return cartasFiltradas;
+  return await prisma.carta.findMany({ where });
 
 }
 
 async function getBaralhos(tema?: string, disponibilidade?: string) {
-  const baralhos = await prisma.baralho.findMany();
+  const where: Record<string, string> = {};
 
-  const baralhosFiltrados = baralhos.filter((b) => {
-    if (!(tema && disponibilidade)) return true;
+  if (tema) where.temaLicenciado = tema;
+  if (disponibilidade) where.disponibilidade = disponibilidade;
 
-    return (
-      b.temaLicenciado === tema ||
-      b.disponibilidade === disponibilidade
-
-    );
-
-  });
-
-  return baralhosFiltrados;
+  return await prisma.baralho.findMany({ where });
 
 }
 
 async function getBaralho(id: string) {
-  const baralhos = await getBaralhos();
-
-  const baralhoFiltrado = baralhos.filter((b) => b.id === id);
-
-  return baralhoFiltrado;
+  return await prisma.baralho.findUnique({ where: { id } });
 
 }
 
-async function getRegrasEspeciais(id: string) {
-  const regras = await prisma.regraEspecial.findMany();
+async function getCartasByBaralhoId(baralhoId: string) {
+  return await prisma.carta.findMany({ where: { baralhoId } });
 
-  const regrasFiltradas = regras.filter((r) => r.baralhoId === id);
+}
 
-  return regrasFiltradas;
+async function getRegrasEspeciaisByBaralhoId(baralhoId: string) {
+  return await prisma.regraEspecial.findMany({ where: { baralhoId } });
+
+}
+
+async function getBaralhoByCartaId(baralhoId: string) {
+  return await prisma.baralho.findUnique({ where: { id: baralhoId } });
+
+}
+
+async function getCartasByRegraEspecialId(regraEspecialId: string) {
+  const regra = await prisma.regraEspecial.findUnique({
+    where: { id: regraEspecialId },
+    include: { afetaCartas: true }
+
+  });
+
+  return regra?.afetaCartas ?? [];
 
 }
 
 async function compararBaralhos(id1: string, id2: string) {
-  const cartas = await getCartas();
+  const [cartasBaralho1, cartasBaralho2, regrasBaralho1, regrasBaralho2] = await Promise.all([
+    getCartasByBaralhoId(id1),
+    getCartasByBaralhoId(id2),
+    getRegrasEspeciaisByBaralhoId(id1),
+    getRegrasEspeciaisByBaralhoId(id2)
 
-  const cartasExclusivasBaralho1 = cartas.filter((c) => c.baralhoId === id1);
-  const regrasEspeciaisBaralho1 = await getRegrasEspeciais(id1);
-  const regrasEspeciaisBaralho1Desc = regrasEspeciaisBaralho1.map((r) => r.descricao);
+  ]);
 
-  const cartasExclusivasBaralho2 = cartas.filter((c) => c.baralhoId === id2);
-  const regrasEspeciaisBaralho2 = await getRegrasEspeciais(id2);
-  const regrasEspeciaisBaralho2Desc = regrasEspeciaisBaralho2.map((r) => r.descricao);
+  const regrasDiferentes = Array.from(
+    new Set([
+      ...regrasBaralho1.map((r) => r.descricao),
+      ...regrasBaralho2.map((r) => r.descricao)
 
-  const regrasDiferentes = Array.from(new Set([ ...regrasEspeciaisBaralho1Desc, ...regrasEspeciaisBaralho2Desc ]));
+    ])
+
+  );
 
   return {
-    cartasExclusivasBaralho1,
-    cartasExclusivasBaralho2,
+    cartasExclusivasBaralho1: cartasBaralho1,
+    cartasExclusivasBaralho2: cartasBaralho2,
     regrasDiferentes
 
-  }
+  };
 
 }
 
@@ -83,6 +85,10 @@ export {
   getBaralhos,
   getBaralho,
   getCartas,
+  getCartasByBaralhoId,
+  getRegrasEspeciaisByBaralhoId,
+  getBaralhoByCartaId,
+  getCartasByRegraEspecialId,
   compararBaralhos
-
+  
 }
