@@ -4,6 +4,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "lib": [ "DOM", "ES2022"],
+    "types": [ "node" ],
 
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -27,7 +28,7 @@
     "verbatimModuleSyntax": true
 
   },
-  "include": ["./src/**/*", "./eslint.config.js", "./vite.config.ts"],
+  "include": ["./src/**/*", "./eslint.config.js", "./vite.config.ts", "./prisma.config.ts"],
   "exclude": ["./node_modules", "./dist"]
 
 }

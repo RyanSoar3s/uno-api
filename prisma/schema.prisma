@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// ------------------------------------------------------------------
+// Enums — idênticos aos enums do schema GraphQL
+// ------------------------------------------------------------------
+
+enum Disponibilidade {
+  FISICO_E_DIGITAL
+  APENAS_FISICO
+  APENAS_DIGITAL
+}
+
+enum Lado {
+  CLARO
+  ESCURO
+}
+
+enum TipoCarta {
+  NUMERO
+  COMPRAR_DOIS
+  COMPRAR_QUATRO
+  PULAR
+  INVERTER
+  CORINGA
+  CORINGA_COMPRAR_QUATRO
+  ESPECIAL
+}
+
+enum Cor {
+  VERMELHO
+  AZUL
+  VERDE
+  AMARELO
+  PRETO
+  ROSA
+  VERDE_AGUA
+  LARANJA
+  ROXO
+}
+
+// ------------------------------------------------------------------
+// Models
+// ------------------------------------------------------------------
+
+model Baralho {
+  // Usamos String (não Int autoincrement) porque os seeds já têm slugs
+  // legíveis como id ("flip", "all-wild", "no-mercy"...). O @default(cuid())
+  // só entra em ação se um id não for passado explicitamente na criação.
+  id                  String          @id @default(cuid())
+  nome                String
+  anoLancamento       Int?
+  totalCartas         Int
+  temaLicenciado      String?
+  disponibilidade     Disponibilidade
+  existeFisicamente   Boolean
+  existeNoJogoDigital Boolean
+  observacao          String?
+
+  cartas          Carta[]
+  regrasEspeciais RegraEspecial[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("baralhos")
+}
+
+model Carta {
+  id                  String    @id @default(cuid())
+  tipo                TipoCarta
+  cor                 Cor? // null quando a cor varia ou não se aplica (ex: "all wild")
+  numero              Int?
+  lado                Lado? // null fora do Uno Flip; CLARO/ESCURO no Flip
+  efeito              String?
+  quantidadeNoBaralho Int
+
+  baralho   Baralho @relation(fields: [baralhoId], references: [id], onDelete: Cascade)
+  baralhoId String
+
+  // Lado inverso da relação N:N com RegraEspecial.afetaCartas.
+  regrasQueAfetam RegraEspecial[] @relation("RegraEspecialAfetaCarta")
+
+  @@index([baralhoId])
+  @@map("cartas")
+}
+
+model RegraEspecial {
+  id        String @id @default(cuid())
+  nome      String
+  descricao String
+
+  // Toda regra especial pertence a um baralho (ex: "Flip Side" pertence ao Uno Flip)
+  baralho   Baralho @relation(fields: [baralhoId], references: [id], onDelete: Cascade)
+  baralhoId String
+
+  // Relação N:N: uma regra pode afetar várias cartas, e uma carta pode
+  // ser afetada por várias regras (ex: Wild Draw Two entra em "Flip Side"
+  // e também em "Desafio ao Comprar")
+  afetaCartas Carta[] @relation("RegraEspecialAfetaCarta")
+
+  @@index([baralhoId])
+  @@map("regras_especiais")
+}

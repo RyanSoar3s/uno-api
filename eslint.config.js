@@ -46,13 +46,16 @@ export default tseslint.config(
       ],
 
       '@typescript-eslint/naming-convention': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off'
+      '@typescript-eslint/no-unsafe-call': 'off',
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/restrict-template-expressions": "off"
 
     },
 
   },
   {
-    files: ['**/*.test.ts', '**/*.spec.ts'],
+    files: ['**/*.test.ts', '**/*.spec.ts', 'prisma.config.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off'
