@@ -7,8 +7,6 @@ const prisma = getClient();
 
 async function populateDB(): Promise<void> {
   await prisma.baralho.deleteMany();
-  await prisma.carta.deleteMany();
-  await prisma.regraEspecial.deleteMany();
 
   console.log(`Banco de dados limpo`)
 
