@@ -278,4 +278,4 @@ npm run test:coverage
 
 ## Licença
 
-MIT — © Ryan Soares
+Este projeto está licenciado sob a [MIT License](LICENSE).
