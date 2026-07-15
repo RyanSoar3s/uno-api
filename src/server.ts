@@ -6,7 +6,8 @@ import typesDefFile from "./schema";
 
 const server = new ApolloServer({
   typeDefs: typesDefFile,
-  resolvers
+  resolvers,
+  introspection: true
 
 });
 
